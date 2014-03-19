@@ -50,7 +50,7 @@ db_namespace = namespace :db do
   end
 
   namespace :migrate do
-    # desc  'Rollbacks the database one migration and re migrate up (options: STEP=x, VERSION=x).'
+    desc  'Shortcut that runs db:migrate:down and db:migrate:up (option: VERSION=x) or db:rollback and db:migrate (option: STEP=x).'
     task :redo => [:environment, :load_config] do
       if ENV['VERSION']
         db_namespace['migrate:down'].invoke
@@ -61,10 +61,10 @@ db_namespace = namespace :db do
       end
     end
 
-    # desc 'Resets your database using your migrations for the current environment'
+    desc 'Shortcut that runs db:drop, db:create and db:migrate'
     task :reset => ['db:drop', 'db:create', 'db:migrate']
 
-    # desc 'Runs the "up" for a given migration VERSION.'
+    desc 'Migrate the database one version up (option: VERSION=x).'
     task :up => [:environment, :load_config] do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
@@ -72,7 +72,7 @@ db_namespace = namespace :db do
       db_namespace['_dump'].invoke
     end
 
-    # desc 'Runs the "down" for a given migration VERSION.'
+    desc 'Migrate the database one version down (option: VERSION=x).'
     task :down => [:environment, :load_config] do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required - To go down one migration, run db:rollback' unless version
